@@ -47,13 +47,14 @@ class CarDealer:
 # Create a class to hold the dealer review data (get from icloudant)
 class DealerReview:
     
-    def __init__(self, id, name, dealership, review, purchase, **kwargs):
+    def __init__(self, id, name, dealership, review, purchase, sentiment, **kwargs):
         # Review data
         self.id = id
         self.name = name
         self.dealership = dealership
         self.review = review
         self.purchase = purchase
+        self.sentiment = sentiment
         
         # If it has a purchase, populate other fields
         if purchase:

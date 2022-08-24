@@ -105,5 +105,5 @@ def get_dealer_details(request, dealer_id):
         # Return the reviews data
         reviews = get_dealer_reviews_from_cf(url, dealer_id)
         # Print the review
-        all_reviews = '\n '.join([review.review for review in reviews])
+        all_reviews = '\n '.join([review.sentiment for review in reviews])
         return HttpResponse(all_reviews)
