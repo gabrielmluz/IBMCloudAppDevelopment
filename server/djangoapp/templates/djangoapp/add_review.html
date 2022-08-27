@@ -1,16 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    {% load static %}
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/css/bootstrap-datepicker.css" rel="stylesheet">
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.js"></script>
+{% extends 'djangoapp/template.html' %}
 
-</head>
-    <body>
-    <!--Add review form here -->
-    </body>
-</html>
+{% block content %}
+
+    <form action="{% url 'djangoapp:postreview' %}" method="post">
+        {% csrf_token %}
+        <h3>Add Review</h3>
+        
+        <!-- <div>
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name" name="name">
+        </div>
+        <div>
+            <label for="dealership">Dealership</label>
+            <input type="number" class="form-control" id="dealership" name="dealership">
+        </div>
+        <div>
+            <label for="review">Review</label>
+            <input type="text" class="form-control" id="review" name="review">
+        </div>
+        <div>
+            <label for="purchase"></label>
+        </div> -->
+
+        <button>Send</button>
+    </form>
+
+{% endblock %}

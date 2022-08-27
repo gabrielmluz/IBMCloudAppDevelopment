@@ -15,4 +15,5 @@ urlpatterns = [
     path('', view=views.get_dealerships, name='index'),
     # Parse the dealer id to get the reviews
     path('dealer/<int:dealer_id>/', views.get_dealer_details, name='dealer_details'),
+    path('add_review', views.add_review, name='postreview'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
-from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf
+from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf, post_request
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
@@ -107,3 +107,31 @@ def get_dealer_details(request, dealer_id):
         # Print the review
         all_reviews = '\n '.join([review.sentiment for review in reviews])
         return HttpResponse(all_reviews)
+
+# Create a `add_review` view to submit a review
+def add_review(request, **kwargs):
+    context = {}
+    user = request.user
+    if request.user.is_authenticated:
+        if request.method == "GET":
+            return render(request, 'djangoapp/add_review.html') 
+        if request.method == "POST":
+            url = "https://9a6517f2.us-south.apigw.appdomain.cloud/api/review/api/review"
+            review = dict()
+            review["id"] = 1
+            review["name"] = "Gabriel Luz"
+            review["dealership"] = 10
+            review["review"] = "Review teste"
+            review["purchase"] = False
+            
+            if review["purchase"]
+            
+            json_payload = dict()
+            json_payload["review"] = review
+            
+            json_data = post_request(url, json_payload)
+            
+            return HttpResponse(json_data)  
+    else:
+        return HttpResponse ("Log in first")      
+        
