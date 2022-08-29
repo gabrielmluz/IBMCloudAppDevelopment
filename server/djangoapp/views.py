@@ -92,9 +92,10 @@ def get_dealerships(request):
         url = "https://9a6517f2.us-south.apigw.appdomain.cloud/api/dealership/api/dealership"
         # Return the dealership data
         dealerships = get_dealers_from_cf(url)
+        context = dealerships
         # Print the dealer names
-        dealer_names = '\n '.join([dealer.short_name for dealer in dealerships])
-        return HttpResponse(dealer_names)
+        #dealer_names = '\n '.join([dealer.short_name for dealer in dealerships])
+        return render(request, 'djangoapp/index.html', {"list" : context})
 
 # View to render a page with the dealer details
 def get_dealer_details(request, dealer_id):
@@ -105,11 +106,11 @@ def get_dealer_details(request, dealer_id):
         # Return the reviews data
         reviews = get_dealer_reviews_from_cf(url, dealer_id)
         # Print the review
-        all_reviews = '\n '.join([review.sentiment for review in reviews])
-        return HttpResponse(all_reviews)
+        context = {"reviews" : reviews}
+        return render(request, 'djangoapp/dealer_details.html', context)
 
 # Create a `add_review` view to submit a review
-def add_review(request, **kwargs):
+def add_review(request, dealer_id):
     context = {}
     user = request.user
     if request.user.is_authenticated:
@@ -118,14 +119,12 @@ def add_review(request, **kwargs):
         if request.method == "POST":
             url = "https://9a6517f2.us-south.apigw.appdomain.cloud/api/review/api/review"
             review = dict()
-            review["id"] = 1
+            review["id"] = dealer_id
             review["name"] = "Gabriel Luz"
-            review["dealership"] = 10
+            review["dealership"] = dealer_id
             review["review"] = "Review teste"
             review["purchase"] = False
-            
-            if review["purchase"]
-            
+                        
             json_payload = dict()
             json_payload["review"] = review
             
@@ -134,4 +133,7 @@ def add_review(request, **kwargs):
             return HttpResponse(json_data)  
     else:
         return HttpResponse ("Log in first")      
-        
+
+def dealer_details(request, dealer_id):
+    context = {"id":dealer_id}
+    return render(request, 'dealer_details.html', context)

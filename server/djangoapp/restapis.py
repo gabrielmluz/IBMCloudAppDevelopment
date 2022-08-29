@@ -19,6 +19,7 @@ def get_request(url, **kwargs):
     print("With status {}".format(status_code))
     # Return the json_data
     json_data = json.loads(response.text)
+    #print(json_data)
     return json_data
 
 # Create a `post_request` to make HTTP POST requests
