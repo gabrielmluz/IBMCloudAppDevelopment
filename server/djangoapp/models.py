@@ -21,10 +21,12 @@ class CarModel(models.Model):
     name = models.CharField(max_length=50)
     dealer_id = models.IntegerField()
     car_type =  models.CharField(max_length=1, choices=CAR_TYPES)
-    year = models.DateField(auto_now=False, auto_now_add=False)
+    year = models.IntegerField()
+    
+    car_manager = models.Manager()
 
     def __str__(self):
-        return self.name + self.year
+        return self.name
 
 # Create a class to hold dealer data (get from icloudant)
 class CarDealer:

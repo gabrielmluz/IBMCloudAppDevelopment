@@ -8,6 +8,7 @@ from django.contrib import messages
 from datetime import datetime
 import logging
 import json
+from .models import CarModel
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -106,7 +107,8 @@ def get_dealer_details(request, dealer_id):
         # Return the reviews data
         reviews = get_dealer_reviews_from_cf(url, dealer_id)
         # Print the review
-        context = {"reviews" : reviews}
+        context["reviews"] = reviews
+        context["dealer_id"] = dealer_id
         return render(request, 'djangoapp/dealer_details.html', context)
 
 # Create a `add_review` view to submit a review
@@ -114,23 +116,38 @@ def add_review(request, dealer_id):
     context = {}
     user = request.user
     if request.user.is_authenticated:
+        
         if request.method == "GET":
-            return render(request, 'djangoapp/add_review.html') 
-        if request.method == "POST":
+            context["cars"] = list(CarModel.car_manager.all().filter(dealer_id=dealer_id))
+            context["dealer_id"] = dealer_id
+            print(context["cars"])
+            return render(request, 'djangoapp/add_review.html', context) 
+        
+        elif request.method == "POST":
+            car_id = request.POST["car"]
+            car = CarModel.car_manager.get(pk=car_id)
+            username = request.user.username
             url = "https://9a6517f2.us-south.apigw.appdomain.cloud/api/review/api/review"
             review = dict()
             review["id"] = dealer_id
-            review["name"] = "Gabriel Luz"
+            review["name"] = username  
             review["dealership"] = dealer_id
-            review["review"] = "Review teste"
+            review["review"] = request.POST["content"]
             review["purchase"] = False
+            if "purchasecheck" in request.POST:
+                if request.POST["purchasecheck"] == 'on':
+                    review["purchase"] = True
+            review["purchase_date"] = request.POST["purchasedate"]
+            review["car_make"] = car.carmake.name
+            review["car_model"] = car.name
+            review["car_year"] = int(car.year)
                         
-            json_payload = dict()
-            json_payload["review"] = review
+            json_review = dict()
+            json_review["review"] = review
             
-            json_data = post_request(url, json_payload)
+            json_data = post_request(url, json_review)
             
-            return HttpResponse(json_data)  
+            return redirect('djangoapp:dealer_details', **{"dealer_id":dealer_id})  
     else:
         return HttpResponse ("Log in first")      
 

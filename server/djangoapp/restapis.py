@@ -26,17 +26,8 @@ def get_request(url, **kwargs):
 # e.g., response = requests.post(url, params=kwargs, json=payload)
 
 def post_request(url, json_payload, **kwargs):
-    print("POST to {}".format(url))
-    print(json_payload)
-    print(kwargs)
-    try:
-       response = requests.post(url, params=kwargs, json=json_payload)
-    except:
-        print("Network exception occured")
-    status_code = response.status_code
-    print("With status {}".format(status_code))
-    json_data = json.loads(response.text)
-    return json_data
+    response = requests.post(url, params=kwargs, json=json_payload)
+    return response
 
 
 # Get dealer from cloud function
