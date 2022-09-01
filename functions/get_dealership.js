@@ -1,27 +1,20 @@
 const { CloudantV1 } = require('@ibm-cloud/cloudant');
 const { IamAuthenticator } = require('ibm-cloud-sdk-core');
-const DB_NAME = "dealerships";
 
-async function main(params) {
-    try{
-      const authenticator = new IamAuthenticator({ apikey: params.IAM_API_KEY });
-      const cloudant = CloudantV1.newInstance({authenticator: authenticator});
-      cloudant.setServiceUrl(params.COUCH_URL);
-      
-      var state = params.state;
-      selector = {'st': state};
-      
-      if (params.id!=null){
-            selector['id'] = parseInt(params.id);
-      }
-      
-      let dbList = await cloudant.postFind({
-          db: DB_NAME,
-          selector: selector
+async function main() {
+      const authenticator = new IamAuthenticator({ apikey: "Vfq3l4o7uhbV3b3zlyK5LWXUB3l3mCTy9vD1O-Vy7ggP" })
+      const cloudant = CloudantV1.newInstance({
+          authenticator: authenticator
       });
-      return dbList.result;
-      
-    } catch (error) {
-      return { error: error.description };
+      cloudant.setServiceUrl("https://fea68551-8177-4d1d-b80b-a3f653e2e8f4-bluemix.cloudantnosqldb.appdomain.cloud");
+     
+      try {
+        let docList = await cloudant.postAllDocs({
+            db: 'dealerships',
+            includeDocs: true
+        });
+        return { "docs": docList.result.rows };
+        } catch (error) {
+          return { error: error.description };
       }
 }
