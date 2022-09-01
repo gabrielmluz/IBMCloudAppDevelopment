@@ -1,34 +1,44 @@
 {% extends 'djangoapp/template.html' %}
 
+{% block title %}
+
+Reviews
+
+{% endblock %}
+
 {% block content %}
 
+    {% comment %} Show the reviews for that dealer, if the user is logged in, allow to insert a new review {% endcomment %}
     {% if user.is_authenticated %}
 
-        <a href="{% url 'djangoapp:postreview' dealer_id %}">Add Review</a>
+        <h5 class="mb-5"><a class="link-dark" href="{% url 'djangoapp:postreview' dealer_id %}">Add Review</a></h5>
 
     {% endif %} 
 
-    <div class="card-columns">
+    <div class="card-group">
 
         {% for review in reviews %}
 
-            <div class="card">
-
-                {% if review.sentiment == "positive" %}
-                    <img src="{{MEDIA_URL}}/emoji/positive.png" class="card-img-left" width="50" height="50">
-                {% elif review.sentiment == "neutral" %}
-                    <img src="{{MEDIA_URL}}/emoji/neutral.png" class="card-img-left" width="50" height="50">
-                {% else %}
-                    <img src="{{MEDIA_URL}}/emoji/negative.png" class="card-img-left" width="50" height="50">
-                {% endif %}
-
-                <div class="card-body">
-                    <h5 class="card-title">{{review.car_year}} {{review.car_make}} {{review.car_model}}</h5>
-                    <h5 class="card-title">{{review.purchase_date}}</h5>
-                    <p class="card-text">{{review.review}}</p>
+            <div class="card mb-3 me-4 border rounded-1 text-bg-light" style="max-width: 540px;">
+                <div class="row g-0" style="height: 100%;">
+                  <div class="col-md-2" style="align-items: center; display: flex; justify-content: center;">
+                    {% if review.sentiment == "positive" %}
+                        <img src="{{MEDIA_URL}}/emoji/positive.png" width="50" height="50">
+                    {% elif review.sentiment == "neutral" %}
+                        <img src="{{MEDIA_URL}}/emoji/neutral.png" width="50" height="50">
+                    {% else %}
+                        <img src="{{MEDIA_URL}}/emoji/negative.png" width="50" height="50">
+                    {% endif %}
+                  </div>
+                  <div class="col-md-10">
+                    <div class="card-body">
+                        <h5 class="card-title">{{review.car_year}} {{review.car_make}} {{review.car_model}}</h5>
+                        <p class="card-title">{{review.purchase_date}}</p>
+                        <p class="card-text">{{review.review}}</p>
+                    </div>
+                  </div>
                 </div>
-
-            </div>
+              </div>
 
         {% endfor %}
 

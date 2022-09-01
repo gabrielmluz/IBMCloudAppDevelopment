@@ -1,24 +1,39 @@
 {% extends 'djangoapp/template.html' %}
 
+{% block title %}
+
+Add Review
+
+{% endblock %}
+
 {% block content %}
 
-    <form action="{% url 'djangoapp:postreview' dealer_id %}" method="post">
+    {% comment %} Add new review {% endcomment %}
+    <form action="{% url 'djangoapp:postreview' dealer_id %}" method="post" class="" style="max-width: 500px; margin: auto;">
         {% csrf_token %}
-        <h3>Add Review</h3>
+        <h3 class="mb-4" style="text-align: center;">Add Review</h3>
         
-        <textarea class="form-control" name="content" id="content" rows="2" required></textarea>
+        <label class="form-label" for="content" style="text-align: left;">Review</label>
+        <textarea class="form-control mb-4" name="content" id="content" rows="2" required></textarea>
 
-        <input type="checkbox" name="purchasecheck" id="purchasecheck">
-        <label for="purchasecheck">Did you buy a car?</label>
+        <div class="form-check">
+            <input class="form-check-input me-2" type="checkbox" name="purchasecheck" id="purchasecheck">
+            <label class="form-check-label mb-4" for="purchasecheck">Did you buy a car?</label>
+        </div>
         
-        <select name="car" id="car" class="form-select" required>
+        <select name="car" id="car" class="form-select mb-4" required>
+            <option selected value="">Select Car Model</option>
             {% for car in cars %}
-                <option selected value={{car.pk}}>{{car.name}}-{{car.carmake.name}}-{{car.year|date:"Y"}}</option>
+                <option value={{car.pk}}>{{car.name}} - {{car.carmake.name}} - {{car.year}}</option>
             {% endfor %}
         </select>
-        <input class="date-own form-control" type="text" name="purchasedate" id="purchasedate">
 
-        <button>Send</button>
+        <label class="form-label" for="purchasedate">Purchase Date</label>
+        <input class="date-own form-control mb-4" type="date" name="purchasedate" id="purchasedate">
+
+        <div style="text-align: center;">
+            <button class="btn btn-primary">Send Review</button>
+        </div>
     </form>
 
     <script type="text/javascript">

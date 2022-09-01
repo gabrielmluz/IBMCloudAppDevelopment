@@ -59,7 +59,7 @@ def registration_request(request):
     context = {}
     # If it is a GET request, just render the registration page
     if request.method == 'GET':
-        return render(request, 'djangoapp/signup.html', context)
+        return render(request, 'djangoapp/registration.html', context)
     # If it a POST request
     elif request.method == 'POST':
         # Get the user information from request.POST
@@ -83,7 +83,7 @@ def registration_request(request):
             login(request, user)
             return redirect('/djangoapp')
         else:
-            return render(request, 'djangoapp/signup.html', context)
+            return render(request, 'djangoapp/registration.html', context)
 
 # View to render the index page with a list of dealerships
 def get_dealerships(request):
@@ -94,8 +94,6 @@ def get_dealerships(request):
         # Return the dealership data
         dealerships = get_dealers_from_cf(url)
         context = dealerships
-        # Print the dealer names
-        #dealer_names = '\n '.join([dealer.short_name for dealer in dealerships])
         return render(request, 'djangoapp/index.html', {"list" : context})
 
 # View to render a page with the dealer details
@@ -111,23 +109,26 @@ def get_dealer_details(request, dealer_id):
         context["dealer_id"] = dealer_id
         return render(request, 'djangoapp/dealer_details.html', context)
 
-# Create a `add_review` view to submit a review
+# Create a add_review view to submit a review
 def add_review(request, dealer_id):
     context = {}
     user = request.user
     if request.user.is_authenticated:
         
+        # If GET request sen user to add review form page
         if request.method == "GET":
             context["cars"] = list(CarModel.car_manager.all().filter(dealer_id=dealer_id))
             context["dealer_id"] = dealer_id
-            print(context["cars"])
+            # Return dealers cars to use in select form
             return render(request, 'djangoapp/add_review.html', context) 
         
+        # If POST request add new review to database
         elif request.method == "POST":
             car_id = request.POST["car"]
             car = CarModel.car_manager.get(pk=car_id)
             username = request.user.username
-            url = "https://9a6517f2.us-south.apigw.appdomain.cloud/api/review/api/review"
+            
+            # Populate the review dict
             review = dict()
             review["id"] = dealer_id
             review["name"] = username  
@@ -145,12 +146,14 @@ def add_review(request, dealer_id):
             json_review = dict()
             json_review["review"] = review
             
+            # Add the review trough the post_request function
+            url = "https://9a6517f2.us-south.apigw.appdomain.cloud/api/review/api/review"
             json_data = post_request(url, json_review)
             
-            return redirect('djangoapp:dealer_details', **{"dealer_id":dealer_id})  
-    else:
-        return HttpResponse ("Log in first")      
+            # Return the user to the dealer_details page
+            return redirect('djangoapp:dealer_details', **{"dealer_id":dealer_id}) 
 
+# Pass the dealer_id to the dealer_details page
 def dealer_details(request, dealer_id):
     context = {"id":dealer_id}
     return render(request, 'dealer_details.html', context)

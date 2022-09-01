@@ -1,22 +1,30 @@
 {% extends 'djangoapp/template.html' %}
 
+{% block title %}
+
+Dealerships
+
+{% endblock %}
+
 {% block content %}
 
-<table class="table" id="table" data-filter-control="true">
-    <thead>
+  {% comment %} Show a table with all dealers information {% endcomment %}
+  <table class="table table-striped" id="table" data-filter-control="true">
+    <thead class="table-dark">
       <tr>
-        <th scope="col">ID</th>
-        <th scope="col">Dealer Name</th>
-        <th scope="col">City</th>
-        <th scope="col">Address</th>
-        <th scope="col">Zip</th>
-        <th scope="col" data-field="state" data-filter-control="select">State</th>
+        <th class="align-middle">#</th>
+        <th class="align-middle">Dealer Name</th>
+        <th class="align-middle">City</th>
+        <th class="align-middle">Address</th>
+        <th class="align-middle">Zip</th>
+        <th class="align-middle" data-field="state" data-filter-control="select">State</th>
       </tr>
     </thead>
     <tbody>
     {% for dealer in list %}
         <tr>
-            <td>{{dealer.id}}</td>
+            <th>{{dealer.id}}</th>
+            {% comment %} Redirect to dealer_details view passing dealer_id to present the dealer reviews {% endcomment %}
             <td><a href="{% url 'djangoapp:dealer_details' dealer.id %}">{{dealer.full_name}}</a></td>
             <td>{{dealer.city}}</td>
             <td>{{dealer.address}}</td>
